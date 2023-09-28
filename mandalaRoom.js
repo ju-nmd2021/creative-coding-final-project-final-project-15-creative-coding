@@ -11,6 +11,11 @@ let chance = 0.1; //chance in 10 of reversal 0.1
 let array1 = [];
 let newArray = [];
 let paused = false;
+
+let handpose;
+let video;
+let predictions = [];
+
 let x1D, x2D, y2D, x3D, y3D, x4D;
 let x1,
   x2,
@@ -225,7 +230,7 @@ function drawMandala(handSize) {
   pop();
   array1 = newArray;
 }
-
+let mappedDistance;
 function draw() {
   // image(video, 0, 0, width, height);
   // mandalaArt();
@@ -235,8 +240,11 @@ function draw() {
   // We can call both functions to draw all keypoints and the skeletons
   drawKeypoints();
 
-  if (predictions.length > 0) {
+  if (predictions.length > 0 && predictions[0].handInViewConfidence > 0.8) {
     let landmarks = predictions[0].landmarks;
+    let x1 = predictions[0].boundingBox.topLeft[0];
+    let x2 = predictions[0].boundingBox.bottomRight[0];
+    let w = x2 - x1;
 
     // Calculate the distance between two key points (e.g., thumb tip and index tip)
     let thumbX = landmarks[4][0];
@@ -268,7 +276,8 @@ function draw() {
 
     // Map the distance to control the size of the mandala
     // let mandalaSize = map(distance, 50, 500, minDist, maxDist); // Adjust the range as needed
-    let mappedDistance = map(distance, 50, 500, 0.2, 2.0); // Adjust the range as needed
+    mappedDistance = map(distance / w, 0, 1, 0.2, 2.0); // Adjust the range as needed
+    // console.log(distance / w);
 
     if(mappedDistance < 0.8) {
       mandalaSize = Math.max(mandalaSize - 0.01, minDist);
@@ -276,14 +285,10 @@ function draw() {
       mandalaSize = Math.min(mandalaSize + 0.01, maxDist);
     }
 
-    // Call the mandalaArt function with the hand size
-    drawMandala(mandalaSize);
   }
+  // Call the mandalaArt function with the hand size
+  drawMandala(mandalaSize);
 }
-
-let handpose;
-let video;
-let predictions = [];
 
 function keyTyped() {
   if (key === "s") {
