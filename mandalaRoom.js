@@ -2,8 +2,9 @@ let player;
 let oscillator;
 let analyser;
 
+let mandalaSize = 0.5;
 let type = 1; //1 for complex see-through, 2 for solid
-let rate = 10; //rate of pedal change 0.5
+let rate = 3; //rate of pedal change 0.5
 let hueyD = 1.4; //rate of color change 1.4
 let fr = 24; //framerate 24
 let chance = 0.1; //chance in 10 of reversal 0.1
@@ -43,10 +44,10 @@ window.addEventListener("load", () => {
   //   player.start();
 });
 
-// window.addEventListener("click", () => {
-//   player.start();
-//   // oscillator.start();
-// });
+window.addEventListener("click", () => {
+  player.start();
+  // oscillator.start();
+});
 
 function setup() {
   frameRate(fr);
@@ -131,22 +132,7 @@ function drawMandala(handSize) {
   newArray = [];
   push();
   translate(width / 2, height / 2);
-  //background(0);
-  //background(random(255), 10, 200);
-
-  // Define your two background colors (e.g., red and blue)
-  let bgColor1 = color(255, 0, 0); // Red
-  let bgColor2 = color(0, 0, 255); // Blue
-
-  // Calculate a value to interpolate between the two colors (e.g., based on time)
-  let bgInterpolation = map(sin(frameCount * 0.02), -1, 1, 0, 1);
-
-  // Interpolate the background color
-  let bgColor = lerpColor(bgColor1, bgColor2, bgInterpolation);
-
-  // Set the background color
-  background(bgColor);
-
+  // background(0);
   // calculate points for each layer, starting with outside pedals and going inward
   for (let k = lay; k > 0; k--) {
     let place = (lay - k) * 14;
@@ -245,6 +231,7 @@ function draw() {
   // mandalaArt();
   //   background(random(255), 10, 200);
 
+  background(0);
   // We can call both functions to draw all keypoints and the skeletons
   drawKeypoints();
 
@@ -263,11 +250,11 @@ function draw() {
     let currentThumbY = thumbY;
     let currentIndexY = indexY;
 
-    currentIndexX += (indexX - currentIndexX) / 5;
-    currentThumbX += (thumbX - currentThumbX) / 5;
+    currentIndexX += (indexX - currentIndexX) / 4;
+    currentThumbX += (thumbX - currentThumbX) / 4;
 
-    currentIndexY += (indexY - currentIndexY) / 5;
-    currentThumbY += (thumbY - currentThumbY) / 5;
+    currentIndexY += (indexY - currentIndexY) / 4;
+    currentThumbY += (thumbY - currentThumbY) / 4;
 
     let distance = dist(
       currentThumbX,
@@ -276,10 +263,18 @@ function draw() {
       currentIndexY
     );
 
-    // let smoothDistance =
+    let minDist = 0.2;
+    let maxDist = 1.5;
 
     // Map the distance to control the size of the mandala
-    let mandalaSize = map(distance, 50, 500, 0.2, 2.0); // Adjust the range as needed
+    // let mandalaSize = map(distance, 50, 500, minDist, maxDist); // Adjust the range as needed
+    let mappedDistance = map(distance, 50, 500, 0.2, 2.0); // Adjust the range as needed
+
+    if(mappedDistance < 0.8) {
+      mandalaSize = Math.max(mandalaSize - 0.01, minDist);
+    } else {
+      mandalaSize = Math.min(mandalaSize + 0.01, maxDist);
+    }
 
     // Call the mandalaArt function with the hand size
     drawMandala(mandalaSize);
