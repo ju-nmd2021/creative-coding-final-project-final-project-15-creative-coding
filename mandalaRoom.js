@@ -5,7 +5,7 @@ let analyser;
 let type = 1; //1 for complex see-through, 2 for solid
 let rate = 10; //rate of pedal change 0.5
 let hueyD = 1.4; //rate of color change 1.4
-let fr = 30; //framerate 24
+let fr = 24; //framerate 24
 let chance = 0.1; //chance in 10 of reversal 0.1
 let array1 = [];
 let newArray = [];
@@ -131,8 +131,8 @@ function drawMandala(handSize) {
   newArray = [];
   push();
   translate(width / 2, height / 2);
-  //   background(0);
-  background(random(255), 10, 200);
+  background(0);
+  //background(random(255), 10, 200);
 
   // calculate points for each layer, starting with outside pedals and going inward
   for (let k = lay; k > 0; k--) {
@@ -266,7 +266,7 @@ function draw() {
     // let smoothDistance =
 
     // Map the distance to control the size of the mandala
-    let mandalaSize = map(distance, 0, 100, 0.2, 2.0); // Adjust the range as needed
+    let mandalaSize = map(distance, 50, 500, 0.2, 2.0); // Adjust the range as needed
 
     // Call the mandalaArt function with the hand size
     drawMandala(mandalaSize);
