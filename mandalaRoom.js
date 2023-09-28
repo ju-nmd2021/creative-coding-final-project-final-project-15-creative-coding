@@ -131,8 +131,21 @@ function drawMandala(handSize) {
   newArray = [];
   push();
   translate(width / 2, height / 2);
-  background(0);
+  //background(0);
   //background(random(255), 10, 200);
+
+  // Define your two background colors (e.g., red and blue)
+  let bgColor1 = color(255, 0, 0); // Red
+  let bgColor2 = color(0, 0, 255); // Blue
+
+  // Calculate a value to interpolate between the two colors (e.g., based on time)
+  let bgInterpolation = map(sin(frameCount * 0.02), -1, 1, 0, 1);
+
+  // Interpolate the background color
+  let bgColor = lerpColor(bgColor1, bgColor2, bgInterpolation);
+
+  // Set the background color
+  background(bgColor);
 
   // calculate points for each layer, starting with outside pedals and going inward
   for (let k = lay; k > 0; k--) {
