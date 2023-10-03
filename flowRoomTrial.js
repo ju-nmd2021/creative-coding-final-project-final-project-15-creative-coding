@@ -1,98 +1,112 @@
-let resolution = 10; // Grid resolution
-let cols, rows;
-let flowfield = [];
-let particles = [];
-
-class Particle {
-  constructor() {
-    this.pos = createVector(random(width), random(height));
-    this.vel = createVector(0, 0);
-    this.acc = createVector(0, 0);
-    this.maxSpeed = 2;
-    this.prevPos = this.pos.copy();
+class Agent {
+  constructor(x, y, maxSpeed, maxForce) {
+    this.position = createVector(x, y);
+    this.lastPosition = createVector(x, y);
+    this.acceleration = createVector(0, 0);
+    this.velocity = createVector(0, 0);
+    this.maxSpeed = maxSpeed;
+    this.maxForce = maxForce;
   }
 
-  update() {
-    // Look up the vector at the particle's current position in the flowfield
-    let x = floor(this.pos.x / resolution);
-    let y = floor(this.pos.y / resolution);
-    let force = flowfield[y][x];
-    this.applyForce(force);
-
-    // Update velocity, position, and store previous position
-    this.vel.add(this.acc);
-    this.vel.limit(this.maxSpeed);
-    this.pos.add(this.vel);
-    this.acc.mult(0);
-    this.edges();
+  follow(desiredDirection) {
+    desiredDirection = desiredDirection.copy();
+    desiredDirection.mult(this.maxSpeed);
+    let steer = p5.Vector.sub(desiredDirection, this.velocity);
+    steer.limit(this.maxForce);
+    this.applyForce(steer);
   }
 
   applyForce(force) {
-    this.acc.add(force);
+    this.acceleration.add(force);
   }
 
-  edges() {
-    if (this.pos.x > width) this.pos.x = 0;
-    if (this.pos.x < 0) this.pos.x = width;
-    if (this.pos.y > height) this.pos.y = 0;
-    if (this.pos.y < 0) this.pos.y = height;
+  update() {
+    this.lastPosition = this.position.copy();
+
+    this.velocity.add(this.acceleration);
+    this.velocity.limit(this.maxSpeed);
+    this.position.add(this.velocity);
+    this.acceleration.mult(0);
   }
 
-  show() {
-    stroke(0, 50);
+  checkBorders() {
+    if (this.position.x < 0) {
+      this.position.x = innerWidth;
+      this.lastPosition.x = innerWidth;
+    } else if (this.position.x > innerWidth) {
+      this.position.x = 0;
+      this.lastPosition.x = 0;
+    }
+    if (this.position.y < 0) {
+      this.position.y = innerHeight;
+      this.lastPosition.y = innerHeight;
+    } else if (this.position.y > innerHeight) {
+      this.position.y = 0;
+      this.lastPosition.y = 0;
+    }
+  }
+
+  draw() {
+    push();
+    stroke(0, 0, 0, 40);
     strokeWeight(1);
-    line(this.pos.x, this.pos.y, this.prevPos.x, this.prevPos.y);
-    this.updatePrev();
-  }
-
-  updatePrev() {
-    this.prevPos.x = this.pos.x;
-    this.prevPos.y = this.pos.y;
+    line(
+      this.lastPosition.x,
+      this.lastPosition.y,
+      this.position.x,
+      this.position.y
+    );
+    pop();
   }
 }
 
 function setup() {
-  createCanvas(400, 400);
-  cols = floor(width / resolution);
-  rows = floor(height / resolution);
-
-  // Initialize flowfield
-  for (let y = 0; y < rows; y++) {
-    let row = [];
-    for (let x = 0; x < cols; x++) {
-      let angle = atan2(
-        height / 2 - y * resolution,
-        width / 2 - x * resolution
-      );
-      row.push(p5.Vector.fromAngle(angle));
-    }
-    flowfield.push(row);
-  }
-
-  // Create particles
-  for (let i = 0; i < 100; i++) {
-    particles.push(new Particle());
-  }
-
-  background(255);
-  noFill();
+  createCanvas(innerWidth, innerHeight);
+  background(255, 255, 255);
+  field = generateField();
+  generateAgents();
 }
 
-function draw() {
-  // Draw flowfield lines
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-      let startX = x * resolution;
-      let startY = y * resolution;
-      let endX = startX + flowfield[y][x].x * resolution * 0.5;
-      let endY = startY + flowfield[y][x].y * resolution * 0.5;
-      line(startX, startY, endX, endY);
+function generateField() {
+  let field = [];
+  noiseSeed(Math.random() * 100);
+  for (let x = 0; x < maxCols; x++) {
+    field.push([]);
+    for (let y = 0; y < maxRows; y++) {
+      const value = noise(x / divider, y / divider) * Math.PI * 2;
+      field[x].push(p5.Vector.fromAngle(value));
     }
   }
+  return field;
+}
 
-  // Update and show particles
-  for (let particle of particles) {
-    particle.update();
-    particle.show();
+function generateAgents() {
+  for (let i = 0; i < 200; i++) {
+    let agent = new Agent(
+      Math.random() * innerWidth,
+      Math.random() * innerHeight,
+      4,
+      0.1
+    );
+    agents.push(agent);
+  }
+}
+
+const fieldSize = 50;
+const maxCols = Math.ceil(innerWidth / fieldSize);
+const maxRows = Math.ceil(innerHeight / fieldSize);
+const divider = 4;
+let field;
+let agents = [];
+
+function draw() {
+  for (let agent of agents) {
+    const x = Math.floor(agent.position.x / fieldSize);
+    const y = Math.floor(agent.position.y / fieldSize);
+    const desiredDirection = field[x][y];
+    agent.follow(desiredDirection);
+    agent.update();
+    agent.checkBorders();
+    agent.draw();
   }
 }
