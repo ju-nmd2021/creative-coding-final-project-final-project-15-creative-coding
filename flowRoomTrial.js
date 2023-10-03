@@ -48,7 +48,7 @@ class Agent {
 
   draw() {
     push();
-    stroke(0, 0, 0, 40);
+    stroke(200, 0, 20, 40);
     strokeWeight(1);
     line(
       this.lastPosition.x,
@@ -73,8 +73,15 @@ function generateField() {
   for (let x = 0; x < maxCols; x++) {
     field.push([]);
     for (let y = 0; y < maxRows; y++) {
+      const centerX = innerWidth / 2;
+      const centerY = innerHeight / 2;
+
+      const vec = createVector(centerX - x * fieldSize, centerY - y * fieldSize);
+
+      vec.normalize();
+
       const value = noise(x / divider, y / divider) * Math.PI * 2;
-      field[x].push(p5.Vector.fromAngle(value));
+      field[x].push(vec);
     }
   }
   return field;
