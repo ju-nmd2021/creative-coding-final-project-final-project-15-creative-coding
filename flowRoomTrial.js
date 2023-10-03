@@ -67,20 +67,62 @@ function setup() {
   generateAgents();
 }
 
+// function generateField() {
+//   let field = [];
+//   noiseSeed(Math.random() * 100);
+//   for (let x = 0; x < maxCols; x++) {
+//     field.push([]);
+//     for (let y = 0; y < maxRows; y++) {
+//       const centerX = innerWidth / 2;
+//       const centerY = innerHeight / 2;
+//       const vec = createVector(
+//         centerX - x * fieldSize,
+//         centerY - y * fieldSize
+//       );
+
+//       const distance = dist(centerX, centerY, x * fieldSize, y * fieldSize);
+
+//       // Normalize the vector and scale it based on distance
+//       if (distance > 0) {
+//         const scaleFactor = map(distance, 0, maxDist, 1, 0);
+//         vec.normalize().mult(scaleFactor);
+//       }
+
+//       //   vec.normalize();
+
+//       const value = noise(x / divider, y / divider) * Math.PI * 2;
+//       field[x].push(vec);
+//     }
+//   }
+//   return field;
+// }
+
 function generateField() {
   let field = [];
-  noiseSeed(Math.random() * 100);
   for (let x = 0; x < maxCols; x++) {
     field.push([]);
     for (let y = 0; y < maxRows; y++) {
+      // Calculate vectors pointing from the center to the current cell
       const centerX = innerWidth / 2;
       const centerY = innerHeight / 2;
+      const vec = createVector(
+        centerX - x * fieldSize,
+        centerY - y * fieldSize
+      );
 
-      const vec = createVector(centerX - x * fieldSize, centerY - y * fieldSize);
+      // Calculate the distance from the center
+      const distance = dist(centerX, centerY, x * fieldSize, y * fieldSize);
 
-      vec.normalize();
+      // Normalize the vector and scale it based on distance
+      if (distance > 0) {
+        // Define a force magnitude to simulate the black hole effect
+        const forceMagnitude = map(distance, 0, maxDist, 0.1, 1);
 
-      const value = noise(x / divider, y / divider) * Math.PI * 2;
+        // Apply the force towards the center
+        vec.normalize().mult(-forceMagnitude);
+      }
+
+      // Assign the vector as the desired direction
       field[x].push(vec);
     }
   }
