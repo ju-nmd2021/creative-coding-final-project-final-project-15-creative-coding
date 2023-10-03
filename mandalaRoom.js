@@ -16,6 +16,8 @@ let handpose;
 let video;
 let predictions = [];
 
+let volume = 10;
+
 let x1D, x2D, y2D, x3D, y3D, x4D;
 let x1,
   x2,
@@ -37,6 +39,8 @@ let x1,
 window.addEventListener("load", () => {
   player = new Tone.Player("assets/sound.mp3");
   oscillator = new Tone.Oscillator(440, "sine").toDestination();
+
+  player.volume.value = -20;
 
   analyser = new Tone.Analyser("fft", 4096);
 
@@ -279,12 +283,13 @@ function draw() {
     mappedDistance = map(distance / w, 0, 1, 0.2, 2.0); // Adjust the range as needed
     // console.log(distance / w);
 
-    if(mappedDistance < 0.8) {
+    if (mappedDistance < 0.8) {
       mandalaSize = Math.max(mandalaSize - 0.01, minDist);
+      volume = Math.max(volume - 0.1, 0);
     } else {
       mandalaSize = Math.min(mandalaSize + 0.01, maxDist);
+      volume = Math.min(volume + 0.5, 50);
     }
-
   }
   // Call the mandalaArt function with the hand size
   drawMandala(mandalaSize);
