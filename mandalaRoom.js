@@ -16,7 +16,7 @@ let handpose;
 let video;
 let predictions = [];
 
-let volume = 10;
+let volume = 20;
 
 let x1D, x2D, y2D, x3D, y3D, x4D;
 let x1,
@@ -37,10 +37,10 @@ let x1,
   lay;
 
 window.addEventListener("load", () => {
-  player = new Tone.Player("assets/sound.mp3");
+  player = new Tone.Player("assets/track2.mp3");
   oscillator = new Tone.Oscillator(440, "sine").toDestination();
 
-  player.volume.value = -20;
+  player.volume.value = volume;
 
   analyser = new Tone.Analyser("fft", 4096);
 
@@ -277,6 +277,8 @@ function draw() {
 
     let minDist = 0.2;
     let maxDist = 1.5;
+    let minVol =1;
+    let maxVol =30;
 
     // Map the distance to control the size of the mandala
     // let mandalaSize = map(distance, 50, 500, minDist, maxDist); // Adjust the range as needed
@@ -285,10 +287,12 @@ function draw() {
 
     if (mappedDistance < 0.8) {
       mandalaSize = Math.max(mandalaSize - 0.01, minDist);
-      volume = Math.max(volume - 0.1, 0);
+      volume = Math.max(volume - 0.5, minVol);
+      player.volume.rampTo(volume, 0.1);
     } else {
       mandalaSize = Math.min(mandalaSize + 0.01, maxDist);
-      volume = Math.min(volume + 0.5, 50);
+      volume = Math.min(volume + 0.5, maxVol);
+      player.volume.rampTo(volume, 0.1);
     }
   }
   // Call the mandalaArt function with the hand size
