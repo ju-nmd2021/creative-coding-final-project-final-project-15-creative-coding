@@ -32,8 +32,8 @@ function modelReady() {
 }
 
 function draw() {
+  let squareColor = color(0); // Initialize square color as black
   background(0, 100, 100);
-
 
   push();
   translate(innerWidth / 2, innerHeight / 2);
@@ -71,7 +71,6 @@ function draw() {
   }
   pop();
   drawKeypoints();
-
 }
 
 function drawAxes() {
@@ -80,44 +79,55 @@ function drawAxes() {
   line(0, -height / 2, 0, height / 2); // Y-axis
 }
 
-
-let x= 0;
-let y= 0;
+let x = 0;
+let y = 0;
 let currentIndexX = innerWidth / 2;
 let currentIndexY = innerHeight / 2;
 
 function drawKeypoints() {
-
   for (let i = 0; i < predictions.length; i++) {
     const prediction = predictions[i];
 
     //  landmarks for the hand
-    if (prediction.landmarks.length > 0 && prediction.handInViewConfidence > 0.8) {
+    if (
+      prediction.landmarks.length > 0 &&
+      prediction.handInViewConfidence > 0.8
+    ) {
       let landmarks = prediction.landmarks;
       // const indexFinger = prediction.landmarks[8];
 
-    let indexX = landmarks[8][0];
-    let indexY = landmarks[8][1];
+      let indexX = landmarks[8][0];
+      let indexY = landmarks[8][1];
 
-    // let currentIndexX = indexX;
-    // let currentIndexY = indexY;
+      // let currentIndexX = indexX;
+      // let currentIndexY = indexY;
 
-    currentIndexX += (indexX - currentIndexX) / 4;
-    currentIndexY += (indexY - currentIndexY) / 4;
-
-
+      currentIndexX += (indexX - currentIndexX) / 4;
+      currentIndexY += (indexY - currentIndexY) / 4;
 
       // Map the index finger coordinates to the canvas dimensions
-       x = map(currentIndexX, 0 , 640, width, 0);
-       y = map(currentIndexY, 0, 480, 0, height);
+      x = map(currentIndexX, 0, 640, width, 0);
+      y = map(currentIndexY, 0, 480, 0, height);
 
       // Draw a point at the mapped coordinates
-      
-    }
+      let col = int(map(squareX, -width / 2, width / 2, 0, xMax * 2));
+      let row = int(map(squareY, -height / 2, height / 2, 0, yMax * 2));
 
+      // Calculate the color index based on the row and column
+      let colorIndex = col + xMax + (row + yMax) * (xMax * 2 + 1);
+
+      // Retrieve the color value of the corresponding square
+      squareColor = getSquareColor(colorIndex);
+    }
   }
-  fill(0, 255, 0);
-      noStroke();
-      ellipse(x, y, 50, 50);
+  fill(squareColor);
+  // noStroke();
+  ellipse(x, y, 50, 50);
 }
 
+function getSquareColor(index) {
+  // Determine the hue and saturation based on the index (modify as needed)
+  let saturation = map(index, 0, (xMax * 2 + 1) * (yMax * 2 + 1), 0, 100);
+  let hue = map(index, 0, (xMax * 2 + 1) * (yMax * 2 + 1), 0, 360);
+  return console.log(color(hue, saturation, 100));
+}
