@@ -8,7 +8,7 @@ let predictions = [];
 function setup() {
   createCanvas(innerWidth, innerHeight);
   video = createCapture(VIDEO);
-  video.size(innerWidth, innerHeight);
+  // video.size(640, 480);
   colorMode(HSB); // Use HSB color mode with a maximum saturation of 100
   // Set the origin to the center of the canvas
   //   translate(innerWidth / 2, innerHeight / 2);
@@ -24,7 +24,7 @@ function setup() {
   // Hide the video element, and just show the canvas
   video.hide();
   // Draw the x and y axes
-  drawAxes();
+  // drawAxes();
 }
 
 function modelReady() {
@@ -32,8 +32,8 @@ function modelReady() {
 }
 
 function draw() {
-  //   background(220);
-  drawKeypoints();
+  background(0, 100, 100);
+
 
   push();
   translate(innerWidth / 2, innerHeight / 2);
@@ -65,11 +65,13 @@ function draw() {
 
       fill(hue, saturation, 100); // Use HSB color with calculated saturation
       // Draw a point at the mapped coordinates
-      ellipse(px, py, 50, 50);
+      noStroke();
+      square(px, py, 150);
     }
   }
   pop();
-  //   noLoop();
+  drawKeypoints();
+
 }
 
 function drawAxes() {
@@ -78,53 +80,44 @@ function drawAxes() {
   line(0, -height / 2, 0, height / 2); // Y-axis
 }
 
-// A function to draw ellipses over the detected keypoints
-// function drawKeypoints() {
-//   for (let i = 0; i < predictions.length; i += 1) {
-//     const prediction = predictions[i];
-//     for (let j = 0; j < prediction.landmarks.length; j += 1) {
-//       const keypoint = prediction.landmarks[j];
-//       fill(0, 255, 0);
-//       noStroke();
-//       ellipse(keypoint[0], keypoint[1], 10, 10);
-//     }
-//   }
-// }
+
+let x= 0;
+let y= 0;
+let currentIndexX = innerWidth / 2;
+let currentIndexY = innerHeight / 2;
 
 function drawKeypoints() {
-  // for (let i = 0; i < predictions.length; i += 1) {
-  //   const prediction = predictions[i];
-  //   for (let j = 0; j < prediction.landmarks.length; j += 1) {
-  //     const keypoint = prediction.landmarks[j];
-
-  //     // Map the keypoint coordinates to the canvas dimensions
-  //     const x = map(keypoint[0], 0, video.width, -width / 2, width / 2);
-  //     const y = map(keypoint[1], 0, video.height, -height / 2, height / 2);
-
-  //     fill(0, 255, 0);
-  //     noStroke();
-  //     ellipse(x, y, 10, 10);
-  //   }
-  // }
 
   for (let i = 0; i < predictions.length; i++) {
     const prediction = predictions[i];
 
-    // Check if there are landmarks for the hand
-    if (prediction.landmarks.length > 0) {
-      // Get the position of the index finger (landmark 8)
-      const indexFinger = prediction.landmarks[8];
+    //  landmarks for the hand
+    if (prediction.landmarks.length > 0 && prediction.handInViewConfidence > 0.8) {
+      let landmarks = prediction.landmarks;
+      // const indexFinger = prediction.landmarks[8];
+
+    let indexX = landmarks[8][0];
+    let indexY = landmarks[8][1];
+
+    // let currentIndexX = indexX;
+    // let currentIndexY = indexY;
+
+    currentIndexX += (indexX - currentIndexX) / 4;
+    currentIndexY += (indexY - currentIndexY) / 4;
+
+
 
       // Map the index finger coordinates to the canvas dimensions
-      const x = map(indexFinger[0], 0, innerWidth, 0, width);
-      const y = map(indexFinger[1], 0, innerHeight, 0, height);
+       x = map(currentIndexX, 0 , 640, width, 0);
+       y = map(currentIndexY, 0, 480, 0, height);
 
       // Draw a point at the mapped coordinates
-      fill(0, 255, 0);
-      noStroke();
-      ellipse(x, y, 10, 10);
+      
     }
+
   }
+  fill(0, 255, 0);
+      noStroke();
+      ellipse(x, y, 50, 50);
 }
 
-// 640 480
