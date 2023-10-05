@@ -30,9 +30,13 @@ function setup() {
 function modelReady() {
   console.log("Model ready!");
 }
+let squareColor;
+let colorDetectionStartTime=0;
+let detectionTime = 2000;
 
 function draw() {
-  let squareColor = color(0); // Initialize square color as black
+  squareColor = color(0);
+   // Initialize square color as black
   background(0, 100, 100);
 
   push();
@@ -84,6 +88,8 @@ let y = 0;
 let currentIndexX = innerWidth / 2;
 let currentIndexY = innerHeight / 2;
 
+
+
 function drawKeypoints() {
   for (let i = 0; i < predictions.length; i++) {
     const prediction = predictions[i];
@@ -110,8 +116,8 @@ function drawKeypoints() {
       y = map(currentIndexY, 0, 480, 0, height);
 
       // Draw a point at the mapped coordinates
-      let col = int(map(squareX, -width / 2, width / 2, 0, xMax * 2));
-      let row = int(map(squareY, -height / 2, height / 2, 0, yMax * 2));
+      let col = int(map(x, -width / 2, width / 2, 0, xMax * 2));
+      let row = int(map(y, -height / 2, height / 2, 0, yMax * 2));
 
       // Calculate the color index based on the row and column
       let colorIndex = col + xMax + (row + yMax) * (xMax * 2 + 1);
@@ -120,7 +126,7 @@ function drawKeypoints() {
       squareColor = getSquareColor(colorIndex);
     }
   }
-  fill(squareColor);
+  fill(0,255,0);
   // noStroke();
   ellipse(x, y, 50, 50);
 }
