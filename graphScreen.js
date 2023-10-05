@@ -32,7 +32,7 @@ function modelReady() {
 }
 let squareColor;
 let colorDetectionStartTime = 0;
-let detectionTime = 2000;
+let detectionThreshold = 2000;
 
 function draw() {
   squareColor = color(0);
@@ -89,6 +89,7 @@ let currentIndexX = innerWidth / 2;
 let currentIndexY = innerHeight / 2;
 
 function drawKeypoints() {
+  
   for (let i = 0; i < predictions.length; i++) {
     const prediction = predictions[i];
 
@@ -124,7 +125,8 @@ function drawKeypoints() {
       if (squareColor !== getSquareColor(colorIndex)) {
         colorDetectionStartTime = millis();
         squareColor = getSquareColor(colorIndex);
-      } else if (millis() - colorDetectionStartTime >= detectionThreshold) {
+        console.log("less than 2 sec");
+      } else if (squareColor === getSquareColor(colorIndex + 100) && millis() - colorDetectionStartTime >= detectionThreshold) {
         // If the same color has been detected for 2 seconds, log it and stop detecting
         console.log("Detected Square Color:", squareColor);
         noLoop(); // Stop further detection
@@ -141,5 +143,5 @@ function getSquareColor(index) {
   // Determine the hue and saturation based on the index (modify as needed)
   let saturation = map(index, 0, (xMax * 2 + 1) * (yMax * 2 + 1), 0, 100);
   let hue = map(index, 0, (xMax * 2 + 1) * (yMax * 2 + 1), 0, 360);
-  return console.log(color(hue, saturation, 100));
+  return fill(hue, saturation, 100);
 }
