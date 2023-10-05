@@ -277,8 +277,8 @@ function draw() {
 
     let minDist = 0.2;
     let maxDist = 1.5;
-    let minVol =1;
-    let maxVol =30;
+    let minVol = 1;
+    let maxVol = 30;
 
     // Map the distance to control the size of the mandala
     // let mandalaSize = map(distance, 50, 500, minDist, maxDist); // Adjust the range as needed

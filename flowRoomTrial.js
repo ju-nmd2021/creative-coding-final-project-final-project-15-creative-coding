@@ -29,23 +29,6 @@ class Agent {
     this.acceleration.mult(0);
   }
 
-  checkBorders() {
-    if (this.position.x < 0) {
-      this.position.x = innerWidth;
-      this.lastPosition.x = innerWidth;
-    } else if (this.position.x > innerWidth) {
-      this.position.x = 0;
-      this.lastPosition.x = 0;
-    }
-    if (this.position.y < 0) {
-      this.position.y = innerHeight;
-      this.lastPosition.y = innerHeight;
-    } else if (this.position.y > innerHeight) {
-      this.position.y = 0;
-      this.lastPosition.y = 0;
-    }
-  }
-
   draw() {
     push();
     stroke(200, 0, 20, 40);
@@ -60,16 +43,25 @@ class Agent {
   }
 }
 
+let fieldSize = 50;
+let maxCols, maxRows;
+let divider = 4;
+let field;
+let agents = [];
+
 function setup() {
   createCanvas(innerWidth, innerHeight);
   background(255, 255, 255);
+  maxCols = Math.ceil(innerWidth / fieldSize);
+  maxRows = Math.ceil(innerHeight / fieldSize);
   field = generateField();
   generateAgents();
 }
 
 function generateField() {
   let field = [];
-  noiseSeed(Math.random() * 100);
+  let t = millis() * 0.001; // Use time for animation
+
   for (let x = 0; x < maxCols; x++) {
     field.push([]);
     for (let y = 0; y < maxRows; y++) {
@@ -82,13 +74,20 @@ function generateField() {
 
       const distance = dist(centerX, centerY, x * fieldSize, y * fieldSize);
 
-      // Normalize the vector and scale it based on distance
-      // if (distance > 0) {
-      //   const scaleFactor = map(distance, 0, maxDist, 1, 0);
-      //   vec.normalize().mult(scaleFactor);
-      // }
+      // Normalize the vector and scale it based on distance and time
+      if (distance > 0) {
+        // Define a force magnitude to simulate the effect
+        const forceMagnitude = map(
+          distance,
+          0,
+          dist(0, 0, centerX, centerY),
+          1,
+          0.1
+        );
 
-      vec.normalize();
+        // Apply the force towards the center
+        vec.normalize().mult(forceMagnitude);
+      }
 
       const value = noise(x / divider, y / divider) * Math.PI * 2;
       field[x].push(vec);
@@ -99,23 +98,30 @@ function generateField() {
 
 
 function generateAgents() {
+  // Generate agents starting from the edges and converging towards the center
   for (let i = 0; i < 200; i++) {
-    let agent = new Agent(
-      Math.random() * innerWidth,
-      Math.random() * innerHeight,
-      4,
-      0.1
-    );
+    let x, y;
+    if (i < 50) {
+      // Start from the top edge
+      x = random(innerWidth);
+      y = 0;
+    } else if (i < 100) {
+      // Start from the right edge
+      x = innerWidth;
+      y = random(innerHeight);
+    } else if (i < 150) {
+      // Start from the bottom edge
+      x = random(innerWidth);
+      y = innerHeight;
+    } else {
+      // Start from the left edge
+      x = 0;
+      y = random(innerHeight);
+    }
+    let agent = new Agent(x, y, 4, 0.1);
     agents.push(agent);
   }
 }
-
-const fieldSize = 50;
-const maxCols = Math.ceil(innerWidth / fieldSize);
-const maxRows = Math.ceil(innerHeight / fieldSize);
-const divider = 10;
-let field;
-let agents = [];
 
 function draw() {
   for (let agent of agents) {
@@ -124,7 +130,6 @@ function draw() {
     const desiredDirection = field[x][y];
     agent.follow(desiredDirection);
     agent.update();
-    agent.checkBorders();
     agent.draw();
   }
 }
