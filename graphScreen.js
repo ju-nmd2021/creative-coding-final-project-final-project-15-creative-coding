@@ -33,6 +33,8 @@ function modelReady() {
 
 function draw() {
   //   background(220);
+  drawKeypoints();
+
   push();
   translate(innerWidth / 2, innerHeight / 2);
   drawAxes();
@@ -67,7 +69,6 @@ function draw() {
     }
   }
   pop();
-  drawKeypoints();
   //   noLoop();
 }
 
@@ -91,15 +92,34 @@ function drawAxes() {
 // }
 
 function drawKeypoints() {
-  for (let i = 0; i < predictions.length; i += 1) {
+  // for (let i = 0; i < predictions.length; i += 1) {
+  //   const prediction = predictions[i];
+  //   for (let j = 0; j < prediction.landmarks.length; j += 1) {
+  //     const keypoint = prediction.landmarks[j];
+
+  //     // Map the keypoint coordinates to the canvas dimensions
+  //     const x = map(keypoint[0], 0, video.width, -width / 2, width / 2);
+  //     const y = map(keypoint[1], 0, video.height, -height / 2, height / 2);
+
+  //     fill(0, 255, 0);
+  //     noStroke();
+  //     ellipse(x, y, 10, 10);
+  //   }
+  // }
+
+  for (let i = 0; i < predictions.length; i++) {
     const prediction = predictions[i];
-    for (let j = 0; j < prediction.landmarks.length; j += 1) {
-      const keypoint = prediction.landmarks[j];
 
-      // Map the keypoint coordinates to the canvas dimensions
-      const x = map(keypoint[0], 0, video.width, -width / 2, width / 2);
-      const y = map(keypoint[1], 0, video.height, -height / 2, height / 2);
+    // Check if there are landmarks for the hand
+    if (prediction.landmarks.length > 0) {
+      // Get the position of the index finger (landmark 8)
+      const indexFinger = prediction.landmarks[8];
 
+      // Map the index finger coordinates to the canvas dimensions
+      const x = map(indexFinger[0], 0, innerWidth, 0, width);
+      const y = map(indexFinger[1], 0, innerHeight, 0, height);
+
+      // Draw a point at the mapped coordinates
       fill(0, 255, 0);
       noStroke();
       ellipse(x, y, 10, 10);
