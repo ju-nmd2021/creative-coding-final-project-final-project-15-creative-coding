@@ -33,7 +33,7 @@ function modelReady() {
 
 function draw() {
   //   background(220);
- push();
+  push();
   translate(innerWidth / 2, innerHeight / 2);
   drawAxes();
 
@@ -78,16 +78,33 @@ function drawAxes() {
 }
 
 // A function to draw ellipses over the detected keypoints
+// function drawKeypoints() {
+//   for (let i = 0; i < predictions.length; i += 1) {
+//     const prediction = predictions[i];
+//     for (let j = 0; j < prediction.landmarks.length; j += 1) {
+//       const keypoint = prediction.landmarks[j];
+//       fill(0, 255, 0);
+//       noStroke();
+//       ellipse(keypoint[0], keypoint[1], 10, 10);
+//     }
+//   }
+// }
+
 function drawKeypoints() {
   for (let i = 0; i < predictions.length; i += 1) {
     const prediction = predictions[i];
     for (let j = 0; j < prediction.landmarks.length; j += 1) {
       const keypoint = prediction.landmarks[j];
+
+      // Map the keypoint coordinates to the canvas dimensions
+      const x = map(keypoint[0], 0, video.width, -width / 2, width / 2);
+      const y = map(keypoint[1], 0, video.height, -height / 2, height / 2);
+
       fill(0, 255, 0);
       noStroke();
-      ellipse(keypoint[0], keypoint[1], 10, 10);
+      ellipse(x, y, 10, 10);
     }
   }
 }
 
-640 480
+// 640 480
