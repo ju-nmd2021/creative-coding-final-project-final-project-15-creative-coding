@@ -67,7 +67,7 @@ function setup() {
   video.size(innerWidth, innerHeight);
   angleMode(DEGREES);
   colorMode(HSB, 360, 100, 100, 100);
-  let rMax = width / 2;
+  // let rMax = width / 2;
   sat = 100;
   if (type == 1) {
     brt = 100;
@@ -235,6 +235,8 @@ function drawMandala(handSize) {
   array1 = newArray;
 }
 let mappedDistance;
+
+
 function draw() {
   // image(video, 0, 0, width, height);
   // mandalaArt();

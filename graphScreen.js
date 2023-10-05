@@ -33,7 +33,7 @@ function modelReady() {
 
 function draw() {
   //   background(220);
-  drawKeypoints();
+ push();
   translate(innerWidth / 2, innerHeight / 2);
   drawAxes();
 
@@ -66,7 +66,8 @@ function draw() {
       ellipse(px, py, 50, 50);
     }
   }
-
+  pop();
+  drawKeypoints();
   //   noLoop();
 }
 
@@ -88,3 +89,5 @@ function drawKeypoints() {
     }
   }
 }
+
+640 480

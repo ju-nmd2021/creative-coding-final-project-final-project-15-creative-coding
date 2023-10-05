@@ -124,6 +124,7 @@ function generateAgents() {
 }
 
 function draw() {
+  background(255,255,255,10);
   for (let agent of agents) {
     const x = Math.floor(agent.position.x / fieldSize);
     const y = Math.floor(agent.position.y / fieldSize);
