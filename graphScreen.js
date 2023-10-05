@@ -31,12 +31,12 @@ function modelReady() {
   console.log("Model ready!");
 }
 let squareColor;
-let colorDetectionStartTime=0;
+let colorDetectionStartTime = 0;
 let detectionTime = 2000;
 
 function draw() {
   squareColor = color(0);
-   // Initialize square color as black
+  // Initialize square color as black
   background(0, 100, 100);
 
   push();
@@ -88,8 +88,6 @@ let y = 0;
 let currentIndexX = innerWidth / 2;
 let currentIndexY = innerHeight / 2;
 
-
-
 function drawKeypoints() {
   for (let i = 0; i < predictions.length; i++) {
     const prediction = predictions[i];
@@ -123,10 +121,18 @@ function drawKeypoints() {
       let colorIndex = col + xMax + (row + yMax) * (xMax * 2 + 1);
 
       // Retrieve the color value of the corresponding square
-      squareColor = getSquareColor(colorIndex);
+      if (squareColor !== getSquareColor(colorIndex)) {
+        colorDetectionStartTime = millis();
+        squareColor = getSquareColor(colorIndex);
+      } else if (millis() - colorDetectionStartTime >= detectionThreshold) {
+        // If the same color has been detected for 2 seconds, log it and stop detecting
+        console.log("Detected Square Color:", squareColor);
+        noLoop(); // Stop further detection
+      }
+      // squareColor = getSquareColor(colorIndex);
     }
   }
-  fill(0,255,0);
+  fill(0, 255, 0);
   // noStroke();
   ellipse(x, y, 50, 50);
 }
