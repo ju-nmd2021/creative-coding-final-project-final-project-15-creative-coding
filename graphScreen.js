@@ -156,6 +156,7 @@ function drawKeypoints() {
 
 
 function getColorOfQuadrant(x, y) {
+
   if (x >= 0 && y >= 0) {
     return color(0, 100, 100); // Color for (x, y)
   } else if (x < 0 && y >= 0) {
@@ -164,6 +165,43 @@ function getColorOfQuadrant(x, y) {
     return color(0, 0, 100); // Color for (-x, -y)
   } else {
     return color(255, 255, 100); // Color for (x, -y)
+  }
+}
+
+// EXPEREMENTS  
+
+function getGrphColor(x, y) {
+  // Loop through each quadrant and draw the points
+  for (let i = -xMax; i <= xMax; i++) {
+    for (let j = -yMax; j <= yMax; j++) {
+      x = i;
+      y = j;
+
+      // Map the coordinates to the canvas
+      let px = map(x, -xMax, xMax, -width / 2, width / 2);
+      let py = map(y, -yMax, yMax, -height / 2, height / 2);
+
+      if (x >= 0 && y >= 0) {
+        //(x, y)
+      color(0, 255, 100); // Use HSB color with calculated saturation
+      console.log(px, py);
+
+      } else if (x < 0 && y >= 0) {
+        //(-x, y)
+      color(255, 0, 0); // Use HSB color with calculated saturation
+      console.log(px, py);
+
+      } else if (x < 0 && y < 0) {
+        // (-x, -y)
+      color(0, 0, 100); // Use HSB color with calculated saturation
+      console.log(px, py);
+
+      } else {
+        // (x, -y)
+      color(255, 255, 100); // Use HSB color with calculated saturation
+        console.log(px, py);
+      }
+    }
   }
 }
 
