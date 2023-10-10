@@ -9,7 +9,7 @@ function setup() {
   createCanvas(innerWidth, innerHeight);
   video = createCapture(VIDEO);
   // video.size(640, 480);
-  colorMode(HSB); // Use HSB color mode with a maximum saturation of 100
+  // colorMode(HSB); // Use HSB color mode with a maximum saturation of 100
   // Set the origin to the center of the canvas
   //   translate(innerWidth / 2, innerHeight / 2);
   //
@@ -32,7 +32,7 @@ function modelReady() {
 }
 let squareColor;
 let colorDetectionStartTime = 0;
-let detectionThreshold = 2000;
+let detectionThreshold = 1000;
 
 function draw() {
   squareColor = color(0);
@@ -40,9 +40,19 @@ function draw() {
   background(0, 100, 100);
 
   push();
-  translate(innerWidth / 2, innerHeight / 2);
-  drawAxes();
 
+  translate(innerWidth / 2, innerHeight / 2);
+
+  drawAxes();
+  
+  graphColor();
+
+  pop();
+
+  drawKeypoints();
+}
+
+function graphColor() {
   // Loop through each quadrant and draw the points
   for (let i = -xMax; i <= xMax; i++) {
     for (let j = -yMax; j <= yMax; j++) {
@@ -53,29 +63,31 @@ function draw() {
       let px = map(x, -xMax, xMax, -width / 2, width / 2);
       let py = map(y, -yMax, yMax, -height / 2, height / 2);
 
-      // Determine the color based on the quadrant and saturation
-      let saturation = map(max(abs(x), abs(y)), 0, max(xMax, yMax), 0, 100);
-      let hue;
-
       if (x >= 0 && y >= 0) {
-        hue = 30; // Orange for (x, y)
-      } else if (x < 0 && y >= 0) {
-        hue = 100; // Red for (-x, y)
-      } else if (x < 0 && y < 0) {
-        hue = 0; // Black for (-x, -y)
-      } else {
-        hue = 200; // Blue for (x, -y)
-      }
+        //(x, y)
+      fill(0, 255, 100); // Use HSB color with calculated saturation
 
-      fill(hue, saturation, 100); // Use HSB color with calculated saturation
+      } else if (x < 0 && y >= 0) {
+        //(-x, y)
+      fill(255, 0, 0); // Use HSB color with calculated saturation
+
+      } else if (x < 0 && y < 0) {
+        // (-x, -y)
+      fill(0, 0, 100); // Use HSB color with calculated saturation
+
+      } else {
+        // (x, -y)
+      fill(255, 255, 100); // Use HSB color with calculated saturation
+
+      }
+      
       // Draw a point at the mapped coordinates
       noStroke();
       square(px, py, 150);
     }
   }
-  pop();
-  drawKeypoints();
 }
+
 
 function drawAxes() {
   stroke(0);
@@ -88,6 +100,8 @@ let y = 0;
 let currentIndexX = innerWidth / 2;
 let currentIndexY = innerHeight / 2;
 
+let currentQuadrantColor = null;
+
 function drawKeypoints() {
   
   for (let i = 0; i < predictions.length; i++) {
@@ -99,13 +113,10 @@ function drawKeypoints() {
       prediction.handInViewConfidence > 0.8
     ) {
       let landmarks = prediction.landmarks;
-      // const indexFinger = prediction.landmarks[8];
 
       let indexX = landmarks[8][0];
       let indexY = landmarks[8][1];
 
-      // let currentIndexX = indexX;
-      // let currentIndexY = indexY;
 
       currentIndexX += (indexX - currentIndexX) / 4;
       currentIndexY += (indexY - currentIndexY) / 4;
@@ -114,34 +125,92 @@ function drawKeypoints() {
       x = map(currentIndexX, 0, 640, width, 0);
       y = map(currentIndexY, 0, 480, 0, height);
 
-      // Draw a point at the mapped coordinates
-      let col = int(map(x, -width / 2, width / 2, 0, xMax * 2));
-      let row = int(map(y, -height / 2, height / 2, 0, yMax * 2));
+      // Calculate the distance between the current and previous position
+      let distance = dist(indexX, indexY, currentIndexX, currentIndexY);
 
-      // Calculate the color index based on the row and column
-      let colorIndex = col + xMax + (row + yMax) * (xMax * 2 + 1);
 
-      // Retrieve the color value of the corresponding square
-      if (squareColor !== getSquareColor(colorIndex)) {
-        colorDetectionStartTime = millis();
-        squareColor = getSquareColor(colorIndex);
-        console.log("less than 2 sec");
-      } else if (squareColor === getSquareColor(colorIndex + 100) && millis() - colorDetectionStartTime >= detectionThreshold) {
-        // If the same color has been detected for 2 seconds, log it and stop detecting
-        console.log("Detected Square Color:", squareColor);
-        noLoop(); // Stop further detection
-      }
-      // squareColor = getSquareColor(colorIndex);
+      //
+      currentQuadrantColor = getColorOfQuadrant(currentIndexX, currentIndexY);
+
+            // Check if the distance is within 20px
+            if (distance <= 20) {
+              // If the index finger is within 20px of its previous position
+              if (millis() - colorDetectionStartTime >= detectionThreshold && currentQuadrantColor !== null) {
+                // If it's been in the same position for 2 seconds or more
+                console.log("Detected Square Color:",  currentQuadrantColor.toString());
+                currentQuadrantColor = null; // Reset the detected color
+                // noLoop(); // Stop further detection
+              }
+            } else {
+              // Reset the timer and last position if the finger moved
+              colorDetectionStartTime = millis();
+              currentIndexX = indexX;
+              currentIndexY = indexY;
+            }
+
     }
   }
   fill(0, 255, 0);
-  // noStroke();
   ellipse(x, y, 50, 50);
 }
 
-function getSquareColor(index) {
-  // Determine the hue and saturation based on the index (modify as needed)
-  let saturation = map(index, 0, (xMax * 2 + 1) * (yMax * 2 + 1), 0, 100);
-  let hue = map(index, 0, (xMax * 2 + 1) * (yMax * 2 + 1), 0, 360);
-  return fill(hue, saturation, 100);
+
+function getColorOfQuadrant(x, y) {
+
+  if (x >= 0 && y >= 0) {
+    return color(0, 100, 100); // Color for (x, y)
+  } else if (x < 0 && y >= 0) {
+    return color(255, 0, 0); // Color for (-x, y)
+  } else if (x < 0 && y < 0) {
+    return color(0, 0, 100); // Color for (-x, -y)
+  } else {
+    return color(255, 255, 100); // Color for (x, -y)
+  }
 }
+
+// EXPEREMENTS  
+
+function getGrphColor(x, y) {
+  // Loop through each quadrant and draw the points
+  for (let i = -xMax; i <= xMax; i++) {
+    for (let j = -yMax; j <= yMax; j++) {
+      x = i;
+      y = j;
+
+      // Map the coordinates to the canvas
+      let px = map(x, -xMax, xMax, -width / 2, width / 2);
+      let py = map(y, -yMax, yMax, -height / 2, height / 2);
+
+      if (x >= 0 && y >= 0) {
+        //(x, y)
+      color(0, 255, 100); // Use HSB color with calculated saturation
+      console.log(px, py);
+
+      } else if (x < 0 && y >= 0) {
+        //(-x, y)
+      color(255, 0, 0); // Use HSB color with calculated saturation
+      console.log(px, py);
+
+      } else if (x < 0 && y < 0) {
+        // (-x, -y)
+      color(0, 0, 100); // Use HSB color with calculated saturation
+      console.log(px, py);
+
+      } else {
+        // (x, -y)
+      color(255, 255, 100); // Use HSB color with calculated saturation
+        console.log(px, py);
+      }
+    }
+  }
+}
+
+
+
+//  CURRENT DETECTED COLOR "rgba(0,255,100,1)"
+
+
+// if (millis() - colorDetectionStartTime >= detectionThreshold && x >= 0 && y >= 0 && x === currentIndexX && y === currentIndexY) {
+//   console.log("Detected Square Color:", squareColor, " fill(0, 255, 100);");
+//   noLoop();
+// } 
