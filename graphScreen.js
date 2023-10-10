@@ -128,44 +128,47 @@ function drawKeypoints() {
       // Calculate the distance between the current and previous position
       let distance = dist(indexX, indexY, currentIndexX, currentIndexY);
 
-
-      //
-      currentQuadrantColor = getColorOfQuadrant(currentIndexX, currentIndexY);
-
             // Check if the distance is within 20px
             if (distance <= 20) {
+              currentQuadrantColor = getColorOfQuadrant(currentIndexX, currentIndexY);
+
               // If the index finger is within 20px of its previous position
               if (millis() - colorDetectionStartTime >= detectionThreshold && currentQuadrantColor !== null) {
                 // If it's been in the same position for 2 seconds or more
-                console.log("Detected Square Color:",  currentQuadrantColor.toString());
+                console.log("Detected Square Color:",  currentQuadrantColor);
                 currentQuadrantColor = null; // Reset the detected color
                 // noLoop(); // Stop further detection
               }
             } else {
               // Reset the timer and last position if the finger moved
               colorDetectionStartTime = millis();
+              currentQuadrantColor = null;
+              console.log(currentQuadrantColor);
               currentIndexX = indexX;
               currentIndexY = indexY;
             }
-
     }
   }
   fill(0, 255, 0);
   ellipse(x, y, 50, 50);
 }
 
+let value;
 
 function getColorOfQuadrant(x, y) {
 
-  if (x >= 0 && y >= 0) {
-    return color(0, 100, 100); // Color for (x, y)
-  } else if (x < 0 && y >= 0) {
-    return color(255, 0, 0); // Color for (-x, y)
+  if (x > innerWidth / 2) {
+    value = "blue" // Color for (x, y)
+  } else if (x < 320) {
+    value =  "red"; // Color for (-x, y)
   } else if (x < 0 && y < 0) {
-    return color(0, 0, 100); // Color for (-x, -y)
+    value =  "yellow"; // Color for (-x, -y)
   } else {
-    return color(255, 255, 100); // Color for (x, -y)
+    value =  "green"; // Color for (x, -y)
   }
+
+  console.log(y);
+  return value;
 }
 
 // EXPEREMENTS  
