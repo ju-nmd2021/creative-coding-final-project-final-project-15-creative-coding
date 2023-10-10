@@ -130,7 +130,7 @@ function drawKeypoints() {
 
             // Check if the distance is within 20px
             if (distance <= 20) {
-              currentQuadrantColor = getColorOfQuadrant(currentIndexX, currentIndexY);
+              currentQuadrantColor = getColorOfQuadrant(x, y);
 
               // If the index finger is within 20px of its previous position
               if (millis() - colorDetectionStartTime >= detectionThreshold && currentQuadrantColor !== null) {
@@ -156,18 +156,19 @@ function drawKeypoints() {
 let value;
 
 function getColorOfQuadrant(x, y) {
-
   if (x > innerWidth / 2) {
-    value = "blue" // Color for (x, y)
-  } else if (x < 320) {
-    value =  "red"; // Color for (-x, y)
-  } else if (x < 0 && y < 0) {
-    value =  "yellow"; // Color for (-x, -y)
-  } else {
-    value =  "green"; // Color for (x, -y)
+    if (y > innerHeight / 2) {
+      value = "green";
+    } else {
+      value = "yellow";
+    }
+  } else if (x < innerWidth / 2) {
+    if (y > innerHeight / 2) {
+      value = "red";
+    } else {
+      value = "blue";
+    }
   }
-
-  console.log(y);
   return value;
 }
 
