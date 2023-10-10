@@ -1,3 +1,7 @@
+import {GraphRoom} from "../graphScreen"
+
+let currentSketch;
+
 const nextButton = document.getElementById("next");
 const prevButton = document.getElementById("prev");
 const githubLink = document.getElementById("github");
@@ -84,4 +88,26 @@ prevButton.addEventListener("click", () => {
     currentExperiment = experiments.length - 1;
   }
   goToExperiment(currentExperiment);
+});
+
+
+
+
+
+
+
+function setup() {
+    // Create a canvas for your initial sketch
+    createCanvas(innerWidth, innerHeight);
+    canvas.parent('sketch-container'); // Make sure the canvas is placed in the designated container
+    currentSketch = new GraphRoom(); // Initialize the current sketch
+}
+
+function draw() {
+    // Call the current sketch's draw function
+    currentSketch.draw();
+}
+
+document.getElementById('graphRoomButton').addEventListener('click', () => {
+    currentSketch = new GraphRoom(); // Load the Graph Room sketch
 });

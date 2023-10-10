@@ -1,3 +1,4 @@
+
 let particles = [];
 const num = 1000;
 let stepSize = 1; // Adjust this value to change the speed
@@ -6,7 +7,7 @@ let flowDirection = 10; // Adjust this value to change the flow direction
 
 const noiseScale = 0.01 / 2;
 
-function setup() {
+export function setup() {
   createCanvas(innerWidth, innerHeight);
   for (let i = 0; i < num; i++) {
     particles.push(createVector(random(width), random(height)));
@@ -15,10 +16,9 @@ function setup() {
   // For a cool effect try uncommenting this line
   // And comment out the background() line in draw
   // stroke(255, 50);
-
 }
 
-function draw() {
+export function draw() {
   stroke(random(100, 255), random(0, 100), random(20, 200));
 
   background(0, 10);
@@ -40,7 +40,7 @@ function draw() {
   }
 }
 
-function mouseReleased() {
+export function mouseReleased() {
   noiseSeed(millis());
 }
 
