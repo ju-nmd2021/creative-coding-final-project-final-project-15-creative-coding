@@ -71,40 +71,4 @@ function goToExperiment(index) {
   p5container.appendChild(iframe);
 }
 
-// nextButton.addEventListener("click", () => {
-//   currentExperiment++;
-//   if (currentExperiment >= experiments.length) {
-//     currentExperiment = 0;
-//   }
-//   goToExperiment(currentExperiment);
-// });
 
-// prevButton.addEventListener("click", () => {
-//   currentExperiment--;
-//   if (currentExperiment < 0) {
-//     currentExperiment = experiments.length - 1;
-//   }
-//   goToExperiment(currentExperiment);
-// });
-
-
-
-
-
-
-
-// function setup() {
-//     // Create a canvas for your initial sketch
-//     createCanvas(innerWidth, innerHeight);
-//     canvas.parent('sketch-container'); // Make sure the canvas is placed in the designated container
-//     currentSketch = new GraphRoom(); // Initialize the current sketch
-// }
-
-// function draw() {
-//     // Call the current sketch's draw function
-//     currentSketch.draw();
-// }
-
-// document.getElementById('graphRoomButton').addEventListener('click', () => {
-//     currentSketch = new GraphRoom(); // Load the Graph Room sketch
-// });

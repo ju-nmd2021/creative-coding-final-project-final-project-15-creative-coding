@@ -36,9 +36,12 @@ let particles = [];
 let flowFieldPredictions = [];
 const num = 1000;
 let stepSize = 1; // Adjust this value to change the speed
-let flowDirection = 10; // Adjust this value to change the flow direction
+let flowDirection = 0; // Adjust this value to change the flow direction
 
 const noiseScale = 0.01 / 2;
+
+let handDetectionStartTime = 0;
+let handDetectionThreshold = 3000;
 
 
 ////////////////////////SHARED FUNCTIONS////////////////////////////
@@ -152,6 +155,7 @@ function drawKeypoints() {
 
       // Calculate the distance between the current and previous position
       let distance = dist(indexX, indexY, currentIndexX, currentIndexY);
+
 
             // Check if the distance is within 20px
             if (distance <= 20) {
@@ -283,14 +287,20 @@ function controlFlowfield() {
           currentIndexY
         );
 
-        if (distance / w < 0.1) {
+
+        // Calculate the direction based on the difference in x and y coordinates
+        let deltaX = thumbX - indexX;
+        let deltaY = thumbY - indexY;
+        let angle = atan2(deltaY, deltaX);
+
+        // Update the flow direction based on the thumb and index finger position
+        flowDirection = angle;
+
+        if (distance / w < 0.1 && millis() - handDetectionStartTime >= handDetectionThreshold ) {
           console.log(distance, distance / w);
-            // noiseSeed(millis());
             window.parent.goToExperiment(1);
         } 
       }
   
 }
 
-
-////////////////////////MANDALA ROOM////////////////////////////
