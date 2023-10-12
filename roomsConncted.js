@@ -6,8 +6,8 @@ let state = "startGraph";
 let handpose;
 let video;
 
-// shared in the graph and flow field
-let currentQuadrantColor = null;
+let currentQuadrantColor = null; // shared in the graph and flow field
+
 
 ////////////////////////GRAPH ROOM EXCLUSIVE VARIABLES////////////////////////////
 
@@ -166,6 +166,7 @@ function drawKeypoints() {
 
             background(0);
              state = "startFlowField";
+            //  window.parent.goToExperiment(1);
               }
             } else {
               // Reset the timer and last position if the finger moved
@@ -204,6 +205,8 @@ function getColorOfQuadrant(x, y) {
 
 
 function drawFlowField() {
+  controlFlowfield();
+
   for (let i = 0; i < num; i++) {
       particles.push(createVector(random(width), random(height)));
   }
@@ -220,7 +223,6 @@ function drawFlowField() {
  
 
   background(0, 10);
-  controlFlowfield();
   for (let i = 0; i < num; i++) {
     let p = particles[i];
     point(p.x, p.y);
@@ -250,10 +252,10 @@ function onScreen(v) {
 
 
 function controlFlowfield() {
-    if (flowFieldPredictions.length > 0 && flowFieldPredictions[0].handInViewConfidence > 0.8) {
-        let landmarks = flowFieldPredictions[0].landmarks;
-        let x1 = flowFieldPredictions[0].boundingBox.topLeft[0];
-        let x2 = flowFieldPredictions[0].boundingBox.bottomRight[0];
+    if (predictions.length > 0 && predictions[0].handInViewConfidence > 0.8) {
+        let landmarks = predictions[0].landmarks;
+        let x1 = predictions[0].boundingBox.topLeft[0];
+        let x2 = predictions[0].boundingBox.bottomRight[0];
         let w = x2 - x1;
     
         // Calculate the distance between two key points (e.g., thumb tip and index tip)
@@ -280,9 +282,11 @@ function controlFlowfield() {
           currentIndexX,
           currentIndexY
         );
-    
-        if (distance > 0.8) {
-            noiseSeed(millis());
+
+        if (distance / w < 0.1) {
+          console.log(distance, distance / w);
+            // noiseSeed(millis());
+            window.parent.goToExperiment(1);
         } 
       }
   

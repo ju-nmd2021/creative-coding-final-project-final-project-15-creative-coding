@@ -33,6 +33,8 @@ function goToExperiment(index) {
   iframe.style.width = "100%";
   iframe.style.height = "100%";
   iframe.style.border = "none";
+  // iframe.allow = "camera * ";
+  // iframe.src = "http://127.0.0.1:5500/";
 
   const bodyElement = document.createElement("div");
 
@@ -67,28 +69,23 @@ function goToExperiment(index) {
 
   iframe.srcdoc = bodyElement.innerHTML;
   p5container.appendChild(iframe);
-
-  nameText.innerText = experiment.name;
-  descriptionText.innerText = experiment.description;
-  backgroundText.innerText = experiment.background;
-  githubLink.href = experiment.github;
 }
 
-nextButton.addEventListener("click", () => {
-  currentExperiment++;
-  if (currentExperiment >= experiments.length) {
-    currentExperiment = 0;
-  }
-  goToExperiment(currentExperiment);
-});
+// nextButton.addEventListener("click", () => {
+//   currentExperiment++;
+//   if (currentExperiment >= experiments.length) {
+//     currentExperiment = 0;
+//   }
+//   goToExperiment(currentExperiment);
+// });
 
-prevButton.addEventListener("click", () => {
-  currentExperiment--;
-  if (currentExperiment < 0) {
-    currentExperiment = experiments.length - 1;
-  }
-  goToExperiment(currentExperiment);
-});
+// prevButton.addEventListener("click", () => {
+//   currentExperiment--;
+//   if (currentExperiment < 0) {
+//     currentExperiment = experiments.length - 1;
+//   }
+//   goToExperiment(currentExperiment);
+// });
 
 
 
