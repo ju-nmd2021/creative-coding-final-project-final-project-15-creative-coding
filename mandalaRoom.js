@@ -18,6 +18,8 @@ let predictions = [];
 
 let volume = 20;
 
+let mappedDistance;
+
 let x1D, x2D, y2D, x3D, y3D, x4D;
 let x1,
   x2,
@@ -234,8 +236,6 @@ function drawMandala(handSize) {
   pop();
   array1 = newArray;
 }
-let mappedDistance;
-
 
 function draw() {
   // image(video, 0, 0, width, height);
