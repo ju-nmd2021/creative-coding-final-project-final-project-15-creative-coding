@@ -66,7 +66,17 @@ startButton.style.display = "block";
 
 startButton.addEventListener("click", () => {
   player.start();
-  // oscillator.start();
+  startButton.style.display = "none";
+});
+
+
+const endButton = window.parent.document.getElementById("endButton");
+
+endButton.style.display = "block";
+
+endButton.addEventListener("click", () => {
+  window.parent.goToExperiment(0);
+  endButton.style.display = "none";
 });
 
 
@@ -335,3 +345,5 @@ function drawKeypoints() {
     }
   }
 }
+
+

@@ -8,32 +8,58 @@ startButton.addEventListener("click", () => {
 });
 
 function setup() {
-  createCanvas(innerWidth, innerHeight);
+  createCanvas(Math.min(innerWidth, 900), innerHeight);
   background(0);
 }
 
-function draw() {
-  textAlign(CENTER);
-  textSize(70);
-  fill(255, 255, 255);
-  text("EMOTIONAL SPACE", innerWidth / 2, innerHeight / 4);
-  text(
-    "We live in a very fast-paced world, where people frequently experience stress and anxiety for many reasons like financial obligations, workload and overwhelming digital connectivity. This increases the need for a space where one can relax, disconnect and become moreaware of their emotions and feelings. Emotion space is a virtual space that uses generative art to reflect and respond to usersemotional states, providing a unique outlet for emotional expression and self-reflection.",
-    innerWidth / 2,
-    innerHeight / 4
-  );
-  text("Emotional identification Room", innerWidth / 2, innerHeight / 4);
-  text(
-    "you will select the a color that best express yourr current emotion. Based on this, a flow field will be generated  where you can aslo control the direction with your hand movment.",
-    innerWidth / 2,
-    innerHeight / 4
-  );
 
-  text("Breathing mandala Room", innerWidth / 2, innerHeight / 4);
+  function draw() {
+    let centerY = innerHeight / 2;
+    textAlign(CENTER);
+    textWrap(WORD);
+ 
+    textSize(70);
+    fill(255, 255, 255);
+  
+    // Text for "EMOTIONAL SPACE"
+    push();
+    textStyle(BOLD);
+    text("EMOTIONAL SPACE", width / 2, centerY - 200);
+  pop();
+  
+    textSize(20);
 
-  text(
-    "This room will generate a mandala art that expands and shrinks depending on your hand movement. Close their hand when breathing in and open your hand when exhaling.",
-    innerWidth / 2,
-    innerHeight / 4
-  );
-}
+    text(
+      "We live in a very fast-paced world, where people frequently experience stress and anxiety for many reasons like financial obligations, workload and overwhelming digital connectivity. This increases the need for a space where one can relax, disconnect and become more aware of their emotions and feelings. Emotion space is a virtual space that uses generative art to reflect and respond to users' emotional states, providing a unique outlet for emotional expression and self-reflection.",
+      0,
+      centerY- 150 ,
+      width 
+    );
+  
+    // Text for "Emotional identification Room"
+    push();
+    textStyle(BOLD);
+    text("Emotional identification Room", width / 2, centerY + 65);
+    pop();
+
+    text(
+      "You will select a color that best expresses your current emotion. Based on this, a flow field will be generated where you can also control the direction with your hand movement.",
+      0,
+      centerY + 100,
+      width
+    );
+  
+    // Text for "Breathing mandala Room"
+    push();
+    textStyle(BOLD);
+    text("Breathing mandala Room", width / 2, centerY + 220);
+     pop();
+  
+    text(
+      "This room will generate a mandala art that expands and shrinks depending on your hand movement. Close your hand when breathing in and open your hand when exhaling.",
+      0,
+      centerY + 250,
+      width
+    );
+  }
+  

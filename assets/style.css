@@ -68,33 +68,58 @@ main section {
 
 .button { 
   display: none;
-  border: none;
-  background-color: red;
-  padding: 2em;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: blue;
+  color: #fff;
   cursor: pointer;
+  width: 30%;
+  height: 7%;
+  border-color: white;
 }
 
 .start_button { 
   display: none;
-  border: none;
-  background-color: blue;
-  padding: 2em;
+  position: fixed;
+  bottom: 90px;
+  left: 50%; /* Horizontally center the element */
+  transform: translateX(-50%); /* Center it by shifting it to the left by half its width */
+  padding: 10px 20px;
+  background-color: transparent;
+  color: #fff;
   cursor: pointer;
+  width: 30%;
+  height: 7%;
+  border-color: white;
 }
 
+.end_button { 
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: red;
+  color: #fff;
+  cursor: pointer;
+  width: 30%;
+  height: 7%;
+  border-color: white;
+}
+
+
+
+
+
+
+.start_button:hover { 
+  background-color: white;
+  color: #000; 
+}
 
 a,
 a:visited {
   color: white;
 }
-
-/* #playButton {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-} */
