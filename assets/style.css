@@ -66,14 +66,35 @@ main section {
   flex-grow: 10;
 }
 
-.button {
+.button { 
+  display: none;
   border: none;
-  background-color: transparent;
+  background-color: red;
   padding: 2em;
   cursor: pointer;
 }
+
+.start_button { 
+  display: none;
+  border: none;
+  background-color: blue;
+  padding: 2em;
+  cursor: pointer;
+}
+
 
 a,
 a:visited {
   color: white;
 }
+
+/* #playButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+} */

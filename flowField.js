@@ -8,13 +8,6 @@ const noiseScale = 0.01 / 2;
 
 function setup() {
   createCanvas(innerWidth, innerHeight);
-  // for (let i = 0; i < num; i++) {
-  //   particles.push(createVector(random(width), random(height)));
-  // }
-
-  // For a cool effect try uncommenting this line
-  // And comment out the background() line in draw
-  // stroke(255, 50);
 }
 
 function draw() {

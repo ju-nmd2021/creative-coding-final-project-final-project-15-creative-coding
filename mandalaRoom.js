@@ -55,21 +55,31 @@ window.addEventListener("load", () => {
   //   player.start();
 });
 
-window.addEventListener("click", () => {
+// window.addEventListener("click", () => {
+//   player.start();
+//   // oscillator.start();
+// });
+
+const startButton = window.parent.document.getElementById("soundButton");
+
+startButton.style.display = "block";
+
+startButton.addEventListener("click", () => {
   player.start();
   // oscillator.start();
 });
 
+
+
 function setup() {
   frameRate(fr);
-  //   let maxSize = min(windowWidth, windowHeight) - 20;
-  //   createCanvas(maxSize, maxSize);
+
   createCanvas(innerWidth, innerHeight);
   video = createCapture(VIDEO);
   video.size(innerWidth, innerHeight);
   angleMode(DEGREES);
   colorMode(HSB, 360, 100, 100, 100);
-  // let rMax = width / 2;
+
   sat = 100;
   if (type == 1) {
     brt = 100;
@@ -143,7 +153,7 @@ function drawMandala(handSize) {
   newArray = [];
   push();
   translate(width / 2, height / 2);
-  // background(0);
+
   // calculate points for each layer, starting with outside pedals and going inward
   for (let k = lay; k > 0; k--) {
     let place = (lay - k) * 14;
@@ -238,10 +248,6 @@ function drawMandala(handSize) {
 }
 
 function draw() {
-  // image(video, 0, 0, width, height);
-  // mandalaArt();
-  //   background(random(255), 10, 200);
-
   background(0);
   // We can call both functions to draw all keypoints and the skeletons
   drawKeypoints();
@@ -283,9 +289,7 @@ function draw() {
     let maxVol = 30;
 
     // Map the distance to control the size of the mandala
-    // let mandalaSize = map(distance, 50, 500, minDist, maxDist); // Adjust the range as needed
     mappedDistance = map(distance / w, 0, 1, 0.2, 2.0); // Adjust the range as needed
-    // console.log(distance / w);
 
     if (mappedDistance < 0.8) {
       mandalaSize = Math.max(mandalaSize - 0.01, minDist);

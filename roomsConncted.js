@@ -35,7 +35,7 @@ let currentIndexY = innerHeight / 2;
 let particles = [];
 let flowFieldPredictions = [];
 const num = 1000;
-let stepSize = 1; // Adjust this value to change the speed
+let stepSize = 4; // Adjust this value to change the speed
 let flowDirection = 0; // Adjust this value to change the flow direction
 
 const noiseScale = 0.01 / 2;
@@ -246,9 +246,9 @@ function drawFlowField() {
 
 }
 
-function mouseReleased() {
-  noiseSeed(millis());
-}
+// function mouseReleased() {
+//   noiseSeed(millis());
+// }
 
 function onScreen(v) {
   return v.x >= 0 && v.x <= width && v.y >= 0 && v.y <= height;
@@ -298,7 +298,7 @@ function controlFlowfield() {
 
         if (distance / w < 0.1 && millis() - handDetectionStartTime >= handDetectionThreshold ) {
           console.log(distance, distance / w);
-            window.parent.goToExperiment(1);
+            window.parent.goToExperiment(2);
         } 
       }
   
