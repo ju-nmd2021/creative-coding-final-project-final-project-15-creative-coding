@@ -1,3 +1,7 @@
+////////CITATIONS////////
+// add the flow field art video link
+
+
 ////////////////////////SHARED VARIABLES////////////////////////////
 
 
@@ -107,21 +111,17 @@ function graphColor() {
       let py = map(y, -yMax, yMax, -height / 2, height / 2);
 
       if (x >= 0 && y >= 0) {
-        //(x, y)
-      fill(0, 255, 100); // Use HSB color with calculated saturation
-
+        //green
+      fill(0, 111, 70);
       } else if (x < 0 && y >= 0) {
-        //(-x, y)
-      fill(255, 0, 0); // Use HSB color with calculated saturation
-
+        //red
+      fill(255, 0, 15); 
       } else if (x < 0 && y < 0) {
-        // (-x, -y)
-      fill(0, 0, 100); // Use HSB color with calculated saturation
-
+        // blue
+      fill(128, 178, 201); 
       } else {
-        // (x, -y)
-      fill(255, 255, 100); // Use HSB color with calculated saturation
-
+        // yellow
+      fill(246, 209, 85);
       }
       
       // Draw a point at the mapped coordinates
@@ -157,34 +157,30 @@ function drawKeypoints() {
       let distance = dist(indexX, indexY, currentIndexX, currentIndexY);
 
 
-            // Check if the distance is within 20px
-            if (distance <= 20) {
-              currentQuadrantColor = getColorOfQuadrant(x, y);
+      // Check if the distance is within 20px
+      if (distance <= 20) {
+        currentQuadrantColor = getColorOfQuadrant(x, y);
 
-              // If the index finger is within 20px of its previous position
-              if (millis() - colorDetectionStartTime >= detectionThreshold && currentQuadrantColor !== null) {
-                // If it's been in the same position for 2 seconds or more
-                console.log("Detected Square Color:",  currentQuadrantColor);
-                // currentQuadrantColor = null; // Reset the detected color
-                // noLoop(); // Stop further detection
+        // If the index finger is within 20px of its previous position
+        if (millis() - colorDetectionStartTime >= detectionThreshold && currentQuadrantColor !== null) {
+          // If it's been in the same position for 2 seconds or more
+          console.log("Detected Square Color:",  currentQuadrantColor);
 
-            background(0);
-             state = "startFlowField";
-            //  window.parent.goToExperiment(1);
-              }
-            } else {
-              // Reset the timer and last position if the finger moved
-              colorDetectionStartTime = millis();
-              currentQuadrantColor = null;
-              console.log(currentQuadrantColor);
-              currentIndexX = indexX;
-              currentIndexY = indexY;
-            }
+      background(0);
+      state = "startFlowField";
+        }
+      } else {
+        // Reset the timer and last position if the finger moved
+        colorDetectionStartTime = millis();
+        currentQuadrantColor = null;
+        currentIndexX = indexX;
+        currentIndexY = indexY;
+      }
     }
   }
-  fill(0, 255, 0);
+  fill(50);
+  noStroke();
   ellipse(x, y, 50, 50);
-
 }
 
 function getColorOfQuadrant(x, y) {
@@ -246,14 +242,9 @@ function drawFlowField() {
 
 }
 
-// function mouseReleased() {
-//   noiseSeed(millis());
-// }
-
 function onScreen(v) {
   return v.x >= 0 && v.x <= width && v.y >= 0 && v.y <= height;
 }
-
 
 function controlFlowfield() {
     if (predictions.length > 0 && predictions[0].handInViewConfidence > 0.8) {

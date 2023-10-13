@@ -1,23 +1,11 @@
 [
   {
-    "file": "startScreen.js",
-    "name": "",
-    "description": "",
-    "background": "",
-    "github": ""
+    "file": "startScreen.js"
   },
   {
-    "file": "roomsConncted.js",
-    "name": "",
-    "description": "",
-    "background": "",
-    "github": ""
+    "file": "roomsConncted.js"
   },
   {
-    "file": "mandalaRoom.js",
-    "name": "",
-    "description": "",
-    "background": "",
-    "github": ""
+    "file": "mandalaRoom.js"
   }
 ]

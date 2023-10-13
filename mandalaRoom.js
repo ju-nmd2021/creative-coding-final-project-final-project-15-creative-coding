@@ -1,3 +1,7 @@
+////////CITATIONS////////
+// add the mandala art video link
+// add the website link for the mp3 track
+
 let player;
 let oscillator;
 let analyser;
@@ -50,15 +54,7 @@ window.addEventListener("load", () => {
   oscillator.toDestination();
   player.connect(analyser);
   player.toDestination();
-
-  //   Tone.Transport.start();
-  //   player.start();
 });
-
-// window.addEventListener("click", () => {
-//   player.start();
-//   // oscillator.start();
-// });
 
 const startButton = window.parent.document.getElementById("soundButton");
 
@@ -302,35 +298,17 @@ function draw() {
     mappedDistance = map(distance / w, 0, 1, 0.2, 2.0); // Adjust the range as needed
 
     if (mappedDistance < 0.8) {
-      mandalaSize = Math.max(mandalaSize - 0.01, minDist);
+      mandalaSize = Math.max(mandalaSize - 0.006, minDist);
       volume = Math.max(volume - 0.5, minVol);
       player.volume.rampTo(volume, 0.1);
     } else {
-      mandalaSize = Math.min(mandalaSize + 0.01, maxDist);
+      mandalaSize = Math.min(mandalaSize + 0.006, maxDist);
       volume = Math.min(volume + 0.5, maxVol);
       player.volume.rampTo(volume, 0.1);
     }
   }
   // Call the mandalaArt function with the hand size
   drawMandala(mandalaSize);
-}
-
-function keyTyped() {
-  if (key === "s") {
-    save("myCanvas.jpg");
-  }
-  if (key === "n") {
-    setup();
-  }
-  if (key === "p") {
-    if (paused) {
-      loop();
-      paused = false;
-    } else {
-      noLoop();
-      paused = true;
-    }
-  }
 }
 
 // A function to draw ellipses over the detected keypoints

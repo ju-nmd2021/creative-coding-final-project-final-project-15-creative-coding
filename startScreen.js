@@ -19,7 +19,7 @@ function setup() {
     textWrap(WORD);
  
     textSize(70);
-    fill(255, 255, 255);
+    fill(214, 213, 203);
   
     // Text for "EMOTIONAL SPACE"
     push();
@@ -37,6 +37,7 @@ function setup() {
     );
   
     // Text for "Emotional identification Room"
+    fill(214, 213, 203);
     push();
     textStyle(BOLD);
     text("Emotional identification Room", width / 2, centerY + 65);
