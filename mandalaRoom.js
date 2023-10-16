@@ -1,6 +1,6 @@
 ////////CITATIONS////////
 // add the mandala art video link
-// add the website link for the mp3 track
+// MP3 track website : https://pixabay.com/sound-effects/search/mp3/
 
 let player;
 let oscillator;
@@ -65,7 +65,6 @@ startButton.addEventListener("click", () => {
   startButton.style.display = "none";
 });
 
-
 const endButton = window.parent.document.getElementById("endButton");
 
 endButton.style.display = "block";
@@ -74,8 +73,6 @@ endButton.addEventListener("click", () => {
   window.parent.goToExperiment(0);
   endButton.style.display = "none";
 });
-
-
 
 function setup() {
   frameRate(fr);
@@ -323,5 +320,3 @@ function drawKeypoints() {
     }
   }
 }
-
-
