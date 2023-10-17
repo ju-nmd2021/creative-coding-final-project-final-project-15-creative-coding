@@ -1,9 +1,7 @@
 ////////CITATIONS////////
-// add the flow field art video link
-
+// the flow field art video link: https://www.youtube.com/watch?v=sZBfLgfsvSk
 
 ////////////////////////SHARED VARIABLES////////////////////////////
-
 
 let state = "startGraph";
 
@@ -12,9 +10,7 @@ let video;
 
 let currentQuadrantColor = null; // shared in the graph and flow field
 
-
 ////////////////////////GRAPH ROOM EXCLUSIVE VARIABLES////////////////////////////
-
 
 let xMax = 10; // Maximum x-value
 let yMax = 10; // Maximum y-value
@@ -32,9 +28,7 @@ let y = 0;
 let currentIndexX = innerWidth / 2;
 let currentIndexY = innerHeight / 2;
 
-
 ////////////////////////FLOW FIELD ROOM EXCLUSIVE VARIABLES////////////////////////////
-
 
 let particles = [];
 let flowFieldPredictions = [];
@@ -47,9 +41,7 @@ const noiseScale = 0.01 / 2;
 let handDetectionStartTime = 0;
 let handDetectionThreshold = 3000;
 
-
 ////////////////////////SHARED FUNCTIONS////////////////////////////
-
 
 function setup() {
   createCanvas(innerWidth, innerHeight);
@@ -67,17 +59,15 @@ function setup() {
   video.hide();
 }
 
-function draw(){
-    if (state === "startGraph") {
-        drawGraph();
-    } else if (state === "startFlowField") {
-        drawFlowField();
-    }
+function draw() {
+  if (state === "startGraph") {
+    drawGraph();
+  } else if (state === "startFlowField") {
+    drawFlowField();
+  }
 }
 
-
 ////////////////////////GRAPH ROOM////////////////////////////
-
 
 function modelReady() {
   console.log("Model ready!");
@@ -91,7 +81,7 @@ function drawGraph() {
   push();
 
   translate(innerWidth / 2, innerHeight / 2);
-  
+
   graphColor();
 
   pop();
@@ -112,18 +102,18 @@ function graphColor() {
 
       if (x >= 0 && y >= 0) {
         //green
-      fill(0, 111, 70);
+        fill(0, 111, 70);
       } else if (x < 0 && y >= 0) {
         //red
-      fill(255, 0, 15); 
+        fill(255, 0, 15);
       } else if (x < 0 && y < 0) {
         // blue
-      fill(128, 178, 201); 
+        fill(128, 178, 201);
       } else {
         // yellow
-      fill(246, 209, 85);
+        fill(246, 209, 85);
       }
-      
+
       // Draw a point at the mapped coordinates
       noStroke();
       square(px, py, 150);
@@ -145,7 +135,6 @@ function drawKeypoints() {
       let indexX = landmarks[8][0];
       let indexY = landmarks[8][1];
 
-
       currentIndexX += (indexX - currentIndexX) / 4;
       currentIndexY += (indexY - currentIndexY) / 4;
 
@@ -156,18 +145,20 @@ function drawKeypoints() {
       // Calculate the distance between the current and previous position
       let distance = dist(indexX, indexY, currentIndexX, currentIndexY);
 
-
       // Check if the distance is within 20px
       if (distance <= 20) {
         currentQuadrantColor = getColorOfQuadrant(x, y);
 
         // If the index finger is within 20px of its previous position
-        if (millis() - colorDetectionStartTime >= detectionThreshold && currentQuadrantColor !== null) {
+        if (
+          millis() - colorDetectionStartTime >= detectionThreshold &&
+          currentQuadrantColor !== null
+        ) {
           // If it's been in the same position for 2 seconds or more
-          console.log("Detected Square Color:",  currentQuadrantColor);
+          console.log("Detected Square Color:", currentQuadrantColor);
 
-      background(0);
-      state = "startFlowField";
+          background(0);
+          state = "startFlowField";
         }
       } else {
         // Reset the timer and last position if the finger moved
@@ -200,27 +191,24 @@ function getColorOfQuadrant(x, y) {
   return value;
 }
 
-
 ////////////////////////FLOW FIELD ROOM////////////////////////////
-
 
 function drawFlowField() {
   controlFlowfield();
 
   for (let i = 0; i < num; i++) {
-      particles.push(createVector(random(width), random(height)));
+    particles.push(createVector(random(width), random(height)));
   }
 
-  if(currentQuadrantColor === "blue") {
+  if (currentQuadrantColor === "blue") {
     stroke(random(0, 100), random(20, 200), random(200, 255));
-  } else if(currentQuadrantColor === "red") {
+  } else if (currentQuadrantColor === "red") {
     stroke(random(200, 255), random(0, 20), random(20, 50));
-  } else if(currentQuadrantColor === "yellow") {
+  } else if (currentQuadrantColor === "yellow") {
     stroke(random(200, 255), random(220, 255), random(0, 20));
   } else {
     stroke(random(0, 50), random(220, 255), random(0, 20));
   }
- 
 
   background(0, 10);
   for (let i = 0; i < num; i++) {
@@ -229,17 +217,16 @@ function drawFlowField() {
     let n = noise(
       p.x * noiseScale,
       p.y * noiseScale,
-      frameCount * noiseScale * noiseScale 
+      frameCount * noiseScale * noiseScale
     );
-    let a = TAU * n + flowDirection;;
-    p.x += cos(a)* stepSize;
-    p.y += sin(a)* stepSize;
+    let a = TAU * n + flowDirection;
+    p.x += cos(a) * stepSize;
+    p.y += sin(a) * stepSize;
     if (!onScreen(p)) {
       p.x = random(width);
       p.y = random(height);
     }
   }
-
 }
 
 function onScreen(v) {
@@ -247,51 +234,51 @@ function onScreen(v) {
 }
 
 function controlFlowfield() {
-    if (predictions.length > 0 && predictions[0].handInViewConfidence > 0.8) {
-        let landmarks = predictions[0].landmarks;
-        let x1 = predictions[0].boundingBox.topLeft[0];
-        let x2 = predictions[0].boundingBox.bottomRight[0];
-        let w = x2 - x1;
-    
-        // Calculate the distance between two key points (e.g., thumb tip and index tip)
-        let thumbX = landmarks[4][0];
-        let thumbY = landmarks[4][1];
-        let indexX = landmarks[8][0];
-        let indexY = landmarks[8][1];
-    
-        let currentThumbX = thumbX;
-        let currentIndexX = indexX;
-    
-        let currentThumbY = thumbY;
-        let currentIndexY = indexY;
-    
-        currentIndexX += (indexX - currentIndexX) / 4;
-        currentThumbX += (thumbX - currentThumbX) / 4;
-    
-        currentIndexY += (indexY - currentIndexY) / 4;
-        currentThumbY += (thumbY - currentThumbY) / 4;
-    
-        let distance = dist(
-          currentThumbX,
-          currentThumbY,
-          currentIndexX,
-          currentIndexY
-        );
+  if (predictions.length > 0 && predictions[0].handInViewConfidence > 0.8) {
+    let landmarks = predictions[0].landmarks;
+    let x1 = predictions[0].boundingBox.topLeft[0];
+    let x2 = predictions[0].boundingBox.bottomRight[0];
+    let w = x2 - x1;
 
+    // Calculate the distance between two key points (e.g., thumb tip and index tip)
+    let thumbX = landmarks[4][0];
+    let thumbY = landmarks[4][1];
+    let indexX = landmarks[8][0];
+    let indexY = landmarks[8][1];
 
-        // Calculate the direction based on the difference in x and y coordinates
-        let deltaX = thumbX - indexX;
-        let deltaY = thumbY - indexY;
-        let angle = atan2(deltaY, deltaX);
+    let currentThumbX = thumbX;
+    let currentIndexX = indexX;
 
-        // Update the flow direction based on the thumb and index finger position
-        flowDirection = angle;
+    let currentThumbY = thumbY;
+    let currentIndexY = indexY;
 
-        if (distance / w < 0.1 && millis() - handDetectionStartTime >= handDetectionThreshold ) {
-          console.log(distance, distance / w);
-            window.parent.goToExperiment(2);
-        } 
-      }
-  
+    currentIndexX += (indexX - currentIndexX) / 4;
+    currentThumbX += (thumbX - currentThumbX) / 4;
+
+    currentIndexY += (indexY - currentIndexY) / 4;
+    currentThumbY += (thumbY - currentThumbY) / 4;
+
+    let distance = dist(
+      currentThumbX,
+      currentThumbY,
+      currentIndexX,
+      currentIndexY
+    );
+
+    // Calculate the direction based on the difference in x and y coordinates
+    let deltaX = thumbX - indexX;
+    let deltaY = thumbY - indexY;
+    let angle = atan2(deltaY, deltaX);
+
+    // Update the flow direction based on the thumb and index finger position
+    flowDirection = angle;
+
+    if (
+      distance / w < 0.1 &&
+      millis() - handDetectionStartTime >= handDetectionThreshold
+    ) {
+      console.log(distance, distance / w);
+      window.parent.goToExperiment(2);
+    }
+  }
 }
-

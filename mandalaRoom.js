@@ -1,5 +1,5 @@
 ////////CITATIONS////////
-// add the mandala art video link
+// Mandala art video link : https://www.youtube.com/watch?v=k28xNx-Q3ys
 // MP3 track website : https://pixabay.com/sound-effects/search/mp3/
 
 let player;
